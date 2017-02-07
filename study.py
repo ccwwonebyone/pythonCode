@@ -22,6 +22,7 @@ class Gui(QMainWindow):
             event.accept()
         else:
             event.ignore()
+
     def button(self):
         #按钮
         qbtn = QPushButton('退出',self)
@@ -36,6 +37,7 @@ class Gui(QMainWindow):
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+
     #菜单
     def action(self):
         exitAction = QAction(QIcon('arrow_left.png'), '&退出', self)

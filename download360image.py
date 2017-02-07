@@ -159,5 +159,5 @@ if __name__ == '__main__':
         mark = chr(random.randint(97, 122))
 
     print('搜索：{}，中共{}页，从第{}页开始，生成图片标记{},生成目录{}'.format(word,page,startPage,mark,word))
-    searchs = Search360(word,page,startPage,mark);
+    searchs = Search360(word,page,startPage,mark)
     searchs.all_start()
