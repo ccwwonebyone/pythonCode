@@ -33,7 +33,7 @@ class Gui(QMainWindow):
 
     def initUi(self):
         self.menu()
-        self.resize(1024,760)
+        self.resize(960,560)
         self.setWindowTitle('360下载')
         self.setWindowIcon(QIcon('arrow_left.png'))
         self.layouts()
@@ -126,7 +126,7 @@ class Gui(QMainWindow):
     def layouts(self):
         grid = QGridLayout()
 
-        sButton = QPushButton('开始搜索')
+        sButton = QPushButton(QIcon('arrow_left.png'),'开始搜索')
         stopDownButton = QPushButton('停止下载')
 
         search = QLabel('搜索')
