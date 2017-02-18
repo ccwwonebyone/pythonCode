@@ -10,7 +10,6 @@ class SearchTouTiao:
     t_mark = 'group'
     headers = { "Accept":"text/html,application/xhtml+xml,application/xml;",
             "Accept-Language":"zh-CN,zh;q=0.8",
-            "Referer":"http://www.example.com/",
             "User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36"
             }
 
@@ -85,11 +84,11 @@ class SearchTouTiao:
         for search in self.searchs:
             all_info = self.creat_file(self.url_content(search))
             i = 1
-            print(all_info)
             j = 1
             for info in all_info:
                 print('开始解析'+str(j))
                 images = self.doc_image(info['url'])
+                print("总共"+str(len(images))+"张")
                 for image in images:
                     imageType = image.split('/')[-1]
                     ir = requests.get(image)
@@ -101,5 +100,8 @@ class SearchTouTiao:
                 j = j+1
 
 if __name__ == '__main__':
-    searchs = SearchTouTiao('壁纸',1,1)
+    search_content = input("搜索内容：")
+    start = input("开始页数：")
+    pages = input("搜索页数：")
+    searchs = SearchTouTiao(search_content,start,pages)
     searchs.start_do()
