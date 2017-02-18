@@ -109,6 +109,9 @@ class Gui(QMainWindow):
                 break
 
             imageType = image.split('.')[-1]
+            if imageType == 'gif' or imageType == 'png':
+                continue
+
             if(len(imageType) > 10):
                 self.do_signal('无效'+str(bad)+'张'+',原图路径：'+image)
                 imageType = 'jpg'
