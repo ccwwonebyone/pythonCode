@@ -1,4 +1,5 @@
 ﻿## python3.6微程序
+
 启用python包
 
 beautifulsoup4
@@ -10,7 +11,9 @@ requestes
 pyqt5
 
 paramiko
+
 ## 关于深度学习keras框架安装(windows)
+
 [安装参考网址](http://keras-cn.readthedocs.io/en/latest/)
 
 安装工具：conda windows：[minconda](https://conda.io/miniconda.html)
