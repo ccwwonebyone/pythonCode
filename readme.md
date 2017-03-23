@@ -7,7 +7,7 @@ beautifulsoup4
 
 jupyter
 
-requestes
+requests
 
 pyqt5
 
