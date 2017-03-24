@@ -12,7 +12,7 @@
 
 使用github上的setup.py安装，pip安装依赖关系有问题一定要Tensorflow，windows不支持，keras[github地址](https://github.com/fchollet/keras)
 
-##关于学习opencv(windows)2017-03-24
+## 关于学习opencv(windows)2017-03-24
 
 需要扩展包  numpy
 
