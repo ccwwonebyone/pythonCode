@@ -28,6 +28,7 @@ class Gui(QMainWindow):
         self.stNumEdit = QLineEdit()
         self.markEdit = QLineEdit()
         self.info = ''
+        self.headers = {'Referer':'http://www.360doc.com/content/14/1114/01/5846940_424958086.shtml'}
         self.isDown = True
         self.initUi()
 
@@ -78,7 +79,7 @@ class Gui(QMainWindow):
         self.mark = self.markEdit.text()
         self.do_signal('搜索：{}，中共{}页，从第{}页开始，生成图片标记{},生成目录{}'.format(self.word,self.pages,self.startPage,self.mark,self.word))
         searchs = download360image.Search360(self.word,self.pages,self.startPage,self.mark)
-        allUserfulImage = []
+        allUserfulImage = {}
         urls = searchs.creat_360SearchUrls()
         l = 1
         for zurl in urls:
@@ -87,8 +88,9 @@ class Gui(QMainWindow):
             l = l+1
             links = searchs.get_docLink(zurl)
             for link in links:
+                href = link['href']
                 images = searchs.get_ImageUrl(link)
-                allUserfulImage = allUserfulImage+images
+                allUserfulImage[href] = images[href]
 
         self.do_signal('总共约'+str(len(allUserfulImage))+'张图片')
         self.save_Image(allUserfulImage)
@@ -103,28 +105,31 @@ class Gui(QMainWindow):
 
         i = 1
         bad = 1
-        for image in allUserfulImage:
-            if self.isDown == False:
-                self.do_signal('全部下载完成,实际总共'+str(i)+'张，无效'+str(bad-1)+'张')
-                break
-
-            imageType = image.split('.')[-1]
-            if imageType == 'gif' or imageType == 'png':
-                continue
-
-            if(len(imageType) > 10):
-                self.do_signal('无效'+str(bad)+'张'+',原图路径：'+image)
-                imageType = 'jpg'
-                bad = bad + 1
-
-            ir = requests.get(image)
-            if ir.status_code == 200:
-                imageName = filePath+'/'+str(self.mark)+'_'+str(i)+'_'+self.strTime+'.'+imageType
-                open(imageName, 'wb').write(ir.content)
-                self.do_signal('已下载第'+str(i)+'张'+':'+imageName+',原图路径：'+image)
-                if(i == len(allUserfulImage)):
+        for key,images in allUserfulImage.items():
+            self.headers['Referer'] = key
+            self.do_signal(key+'共有'+str(len(images))+'张图片')
+            for image in images:
+                if self.isDown == False:
                     self.do_signal('全部下载完成,实际总共'+str(i)+'张，无效'+str(bad-1)+'张')
-                i = i+1
+                    break
+
+                imageType = image.split('.')[-1]
+                if imageType == 'gif' or imageType == 'png':
+                    continue
+
+                if(len(imageType) > 10):
+                    self.do_signal('无效'+str(bad)+'张'+',原图路径：'+image)
+                    imageType = 'jpg'
+                    bad = bad + 1
+
+                ir = requests.get(image,headers=self.headers)
+                if ir.status_code == 200:
+                    imageName = filePath+'/'+str(self.mark)+'_'+str(i)+'_'+self.strTime+'.'+imageType
+                    open(imageName, 'wb').write(ir.content)
+                    self.do_signal('已下载第'+str(i)+'张'+':'+imageName+',原图路径：'+image)
+                    if(i == len(allUserfulImage)):
+                        self.do_signal('全部下载完成,实际总共'+str(i)+'张，无效'+str(bad-1)+'张')
+                    i = i+1
 
     def layouts(self):
         grid = QGridLayout()

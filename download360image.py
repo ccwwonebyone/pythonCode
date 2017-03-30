@@ -9,6 +9,7 @@ class Search360:
     common_url = 'http://www.360doc.com/search/searchArt.ashx?'
     mark = ''
     strTime = str(int(time.time()))
+    headers = {'Referer':'http://www.360doc.com/content/14/1114/01/5846940_424958086.shtml'}
     '''
     word搜索内容
     page搜索页数
@@ -76,7 +77,8 @@ class Search360:
     '''
     def get_ImageUrl(self,link):
         href = link['href']
-        allUserfulImage = []
+        #allUserfulImage = []
+        allUserfulImage = {href:[]}
         imgHtml = requests.get(href)
         if imgHtml.status_code == 200:
             imgHtml.encoding = 'utf-8'
@@ -87,7 +89,7 @@ class Search360:
                     if str(image['src']).find('DownloadImg') == -1:
                         pass
                     else:
-                        allUserfulImage.append(image['src'])
+                        allUserfulImage[href].append(image['src'])
                 except Exception:
                     pass
 
@@ -105,28 +107,32 @@ class Search360:
             os.makedirs(filePath)
         i = 1
         bad = 1
-        for image in allUserfulImage:
-            imageType = image.split('.')[-1]
-            if(len(imageType) > 10):
-                print('无效'+str(bad)+'张')
-                bad = bad + 1
-            else:
-                ir = requests.get(image)
-                if ir.status_code == 200:
-                    imageName = filePath+'/'+str(self.mark)+'_'+str(i)+'_'+self.strTime+'.'+imageType
-                    open(imageName, 'wb').write(ir.content)
-                    print('已下载第'+str(i)+'张'+':'+imageName)
-                    if(i+bad == len(allUserfulImage)+1):
-                        print('全部下载完成,实际总共'+str(i)+'张，无效'+str(bad)+'张')
+        for key,images in allUserfulImage.items():
+            self.headers['Referer'] = key
+            print(key+'共有'+str(len(images))+'张图片')
+            for image in images:
+                imageType = image.split('.')[-1]
 
-                    i = i+1
+                if(len(imageType) > 10):
+                    print('无效'+str(bad)+'张')
+                    bad = bad + 1
+                else:
+                    ir = requests.get(image,headers=self.headers)
+                    if ir.status_code == 200:
+                        imageName = filePath+'/'+str(self.mark)+'_'+str(i)+'_'+self.strTime+'.'+imageType
+                        open(imageName, 'wb').write(ir.content)
+                        print('已下载第'+str(i)+'张'+':'+imageName)
+                        if(i+bad == len(allUserfulImage)+1):
+                            print('全部下载完成,实际总共'+str(i)+'张，无效'+str(bad)+'张')
+
+                        i = i+1
 
     '''
     开始执行阶段
     '''
     def all_start(self):
         print('正在解析。。。获取图片中')
-        allUserfulImage = []
+        allUserfulImage = {}
         urls = self.creat_360SearchUrls()
         l = 1
         for zurl in urls:
@@ -134,10 +140,12 @@ class Search360:
             l = l+1
             links = self.get_docLink(zurl)
             for link in links:
+                href = link['href']
                 images = self.get_ImageUrl(link)
-                allUserfulImage = allUserfulImage+images
+                allUserfulImage[href] = images[href]
 
-        print('总共约'+str(len(allUserfulImage))+'张图片')
+        #print(allUserfulImage)
+        #print('总共约'+str(len(allUserfulImage))+'张图片')
         self.save_Image(allUserfulImage)
 
 if __name__ == '__main__':
