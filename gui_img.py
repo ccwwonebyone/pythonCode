@@ -5,7 +5,7 @@
 # -*- coding=utf-8 -*-
 import hashlib,time,requests,sys,os,random
 from bs4 import BeautifulSoup
-import download360image
+from p360 import download360image
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
