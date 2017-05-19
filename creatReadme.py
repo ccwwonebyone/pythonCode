@@ -10,6 +10,7 @@ class ListDir:
     space   = '&nbsp; &nbsp;'
     mark    = '&gt;'
     username = ''
+    passFile = ['png','jpg','gif']
     rn = "\r\n"
     def __init__(self,username,repository,branch):
         self.username = username
@@ -19,7 +20,7 @@ class ListDir:
 
     def getAllFile(self,path):
         files = []
-        for file in os.listdir(path):    #三个参数：分别返回1.父目录 2.所有文件夹名字（不含路径） 3.所有文件名字
+        for file in os.listdir(path):
             dirname = path.replace('./','')
             if file != '.git' and file != '.gitignore':
                 if os.path.isdir(path+file):
@@ -37,7 +38,11 @@ class ListDir:
                 string += self.rn+'>'+'#'*level+' '+self.mark*(level-2)+' ['+os.path.basename(name)+']'+'('+self.dirUrl+name+')'
                 string += self.rn+self.parseFiles(file[name],level+1)
             else:
-                string += self.rn+'>'+'#'*level+' '+self.mark*(level-2)+' ['+os.path.basename(file)+']'+'('+self.fileUrl+file+')'
+                fileType = file.split('.')[-1]
+                if fileType in self.passFile:
+                    pass
+                else:
+                    string += self.rn+'>'+'#'*level+' '+self.mark*(level-2)+' ['+os.path.basename(file)+']'+'('+self.fileUrl+file+')'
         return string
 
     def creatReadme(self):
@@ -56,3 +61,4 @@ if __name__ == '__main__':
     listdir = ListDir(username,repository,branch)
     listdir.creatReadme()
     print('已更新'+username+'的'+repository+'仓库的'+branch+'分支的'+'readme.md文件')
+    input('回车退出')
