@@ -19,3 +19,8 @@
 [python3.6 opencv下载地址](http://www.lfd.uci.edu/~gohlke/pythonlibs/)
 
 pip intsall ...
+
+## 关于遗传算法（简单实例）2017-10-12
+
+gen.py
+画图
