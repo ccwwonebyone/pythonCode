@@ -98,7 +98,7 @@ class SearchTouTiao:
             i = 1
             j = 1
             for info in all_info:
-                print('开始解析'+ info +str(j))
+                print('开始解析'+str(j))
                 images = self.doc_image(info['url'])
                 print("总共"+str(len(images))+"张")
                 for image in images:
@@ -111,11 +111,8 @@ class SearchTouTiao:
                         i = i+1
                 j = j+1
 if __name__ == '__main__':
-    #search_content = input("搜索内容：")
-    #start = input("开始页数：")
-    #pages = input("搜索页数：")
-    search_content = '猫咪'
-    start = 1
-    pages = 1
+    search_content = input("搜索内容：")
+    start = input("开始页数：")
+    pages = input("搜索页数：")
     searchs = SearchTouTiao(search_content,start,pages)
     searchs.start_do()
