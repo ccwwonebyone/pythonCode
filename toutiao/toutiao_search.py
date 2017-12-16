@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import hashlib,time,requests,sys,os,random,json
 from bs4 import BeautifulSoup
+import demjson
 
 class SearchTouTiao:
     base_url = 'http://www.toutiao.com/'
@@ -39,6 +40,7 @@ class SearchTouTiao:
                         links_info.append(link_info)
                 except Exception:
                     pass
+            print(links_info)
         return links_info
     #创建目录，返回目录路径及其他信息
     def creat_file(self,links_info):
@@ -63,7 +65,7 @@ class SearchTouTiao:
             links_infos.append(link_info)
 
         return links_infos
-
+    ##解析图片信息
     def doc_image(self,url):
         try:
             res = requests.get(url,headers=self.headers)
@@ -72,21 +74,31 @@ class SearchTouTiao:
                 res.encoding = 'utf-8'
                 #print(res)
                 html = BeautifulSoup(res.text, "html.parser")
-                imgs = html.select('.article-content > div > p > img')
+                #print(html)
+                for info in html.select('script'):
+                    if 'articleInfo' in info.text:
+                        result = info.text[15:-1]
+                        result = result[:result.find('shareInfo')-5]+'}'
+                        #print(result)
+                        break
+                jsonInfo = demjson.decode(result)
+                content = jsonInfo['articleInfo']['content'].replace('&lt;','<').replace('&gt;','>').replace('&quot;','"').replace('&#x3D;','=')
+                content = BeautifulSoup(content,"html.parser")
+                imgs = content.select('img')
                 for img in imgs:
                     imgUrl.append(img['src'])
             return imgUrl
         except Exception:
             return []
 
-
+    #下载图片
     def start_do(self):
         for search in self.searchs:
             all_info = self.creat_file(self.url_content(search))
             i = 1
             j = 1
             for info in all_info:
-                print('开始解析'+str(j))
+                print('开始解析'+ info +str(j))
                 images = self.doc_image(info['url'])
                 print("总共"+str(len(images))+"张")
                 for image in images:
@@ -98,10 +110,12 @@ class SearchTouTiao:
                         print('已下载第'+str(i)+'张'+':'+imageName)
                         i = i+1
                 j = j+1
-
 if __name__ == '__main__':
-    search_content = input("搜索内容：")
-    start = input("开始页数：")
-    pages = input("搜索页数：")
+    #search_content = input("搜索内容：")
+    #start = input("开始页数：")
+    #pages = input("搜索页数：")
+    search_content = '猫咪'
+    start = 1
+    pages = 1
     searchs = SearchTouTiao(search_content,start,pages)
     searchs.start_do()
