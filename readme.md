@@ -1,7 +1,7 @@
 ﻿
 ## python3.6微程序
 
-启用python包  beautifulsoup4,jupyter,requests,pyqt5,paramiko
+启用python包  beautifulsoup4,jupyter,requests,pyqt5,paramiko,pygame
 
 ## 关于深度学习keras框架安装(windows)2017-01-18
 [安装参考网址](http://keras-cn.readthedocs.io/en/latest/)
@@ -26,3 +26,24 @@ pip intsall ...
 
 gen.py
 画图
+
+## pyqt5学习
+
+gui_img.py
+tarns.py
+
+## 爬虫等
+
+GetNew.py,toutiao/*,p360/*,
+
+## pythonchallenge
+
+challenge/*
+
+## mysql模拟数据程序
+
+dmysql/*
+
+## pygame
+
+gadraw.py
