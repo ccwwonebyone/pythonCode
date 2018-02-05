@@ -82,7 +82,7 @@ class Gui(QMainWindow):
             self.statusBar().showMessage('共'+str(len(pdFcontent))+'页，翻译第' + str(i+1) + '页')
             reslut = ''
             for j in range(0,len(pdFcontent[i]),1800):                      #百度API一次最多翻译2000字符
-                #reslut += pdf.get_translate_content(pdFcontent[i][j:j+1800])
+                reslut += pdf.get_translate_content(pdFcontent[i][j:j+1800])
                 self.do_signal()                                            #百度API长字符串间隔时间3s
             handler.write(reslut)                                           
             self.oldText.append(pdFcontent[i])
@@ -90,13 +90,14 @@ class Gui(QMainWindow):
             process = int(((i + 1) / len(pdFcontent)) * 100)
             self.progress.setValue(process)
         handler.close()
+        self.isTran = False
+        self.startTranButton.setText('开始翻译')
+        self.statusBar().showMessage('翻译完成')
     def openFileDir(self):
         fileName,fileType = self.file.getOpenFileName()
         self.fileText.setText(fileName)
         self.statusBar().showMessage('打开文件' + fileName)
         
-    def closeEvent(self):
-        print(1)
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     gui = Gui()
