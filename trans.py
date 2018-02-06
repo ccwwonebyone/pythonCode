@@ -72,7 +72,7 @@ class Gui(QMainWindow):
         if fileName == '':
             self.statusBar().showMessage('请选择文件')
             return False
-        pdf = PdfEnCn('20180126000118825', 'viZi_BOz82KK1FbIIE8x')
+        pdf = PdfEnCn('', '')
         pdFcontent = pdf.readPdf(fileName)        
         handler = open(fileName +'trans.txt', 'w+',  encoding='utf-8')
         #根据总页数设置翻译进度
