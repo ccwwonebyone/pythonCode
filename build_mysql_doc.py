@@ -75,7 +75,7 @@ if __name__ == '__main__':
     for table in build_mysql_doc.get_tables():
         content += """
 ---
-## *"""+table['name']+"""*
+## *"""+table['name']+'-'+table['comment']+"""*
 ```
 注释："""+table['comment']+"""
 engine："""+table['engine']+"""
