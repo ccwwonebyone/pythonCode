@@ -84,5 +84,5 @@ if __name__ == "__main__":
             is_creat_table = True
         res, sql = json_to_mysql.insert(table, data)
         if res == False:
-            fb.write(sql + "\r\n")
+            fb.write(sql + ";\r\n")
     fb.close()
