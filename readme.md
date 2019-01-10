@@ -47,3 +47,11 @@ dmysql/*
 ## pygame
 
 gadraw.py
+
+## scrapy + selenium + beautifulshop
+
+sele/*
+
+```
+middlewares.SeleDownloaderMiddleware.process_request    # selenium 
+```
