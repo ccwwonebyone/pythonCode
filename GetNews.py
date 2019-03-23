@@ -46,6 +46,7 @@ class GetNews:
     channel = {
         'wangyi':{'tech':'tech'}
     }
+
     #获取链接信息
     def get_info(self,url,encode = False):
         re = requests.get(url,headers=self.headers, timeout=1)
@@ -55,6 +56,7 @@ class GetNews:
             return re.text
         else:
             return False
+
     def get_article_urls(self,text,type):
         article_urls = []
         if type == 'wangyi':                        #网易
@@ -79,6 +81,7 @@ class GetNews:
             for info in text['data']:
                 article_urls += [info['url']]
         return article_urls
+
     def get_article_info(self,url,type):
         title,pubtime,content = '','',''
         encode = False
@@ -117,6 +120,7 @@ class GetNews:
         if content == '':
             content = BeautifulSoup('', "html.parser")
         return title,pubtime,content
+
     def get_similarity_gegree(self,originals,exponent):         #获取需要对比文章与其他文章的相似度
         oris = []
         for original in originals:
@@ -144,6 +148,7 @@ class GetNews:
             if t not in stop_words:
                 result += [t]
         return result
+
     #获取搜索的url
     def get_search_url(self,web,type):
         webObj   = Web.objects
