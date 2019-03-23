@@ -106,12 +106,12 @@ class GetNews:
             html = BeautifulSoup(text, "html.parser")
             title = html.select('#epContentLeft h1')[0].text
             pubtime = html.select('#epContentLeft .post_time_source')[0].text[17:36]
-            content = html.select('#endText')[0];
+            content = html.select('#endText')[0]
         if type == 'sina':
             html = BeautifulSoup(text, "html.parser")
             title = html.select('.main-content h1')[0].text
             pubtime = html.select('#top_bar .date')[0].text.replace('年','-').replace('月','-').replace('日','')+':00'
-            content = html.select('#artibody')[0];
+            content = html.select('#artibody')[0]
         if type == 'tencent':
             html = BeautifulSoup(text, "html.parser")
             title = html.select('.LEFT h1')[0].text
