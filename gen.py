@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PIL import Image as im
 from os import path
 from math import log
