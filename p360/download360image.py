@@ -69,8 +69,10 @@ class Search360:
                 links = html.select('.wzbtlista > a')
                 return links
             except Exception:
+                print('解析数据系错误')
                 return False
         else:
+            print('请求源地址出错')
             return False
     '''
     获取文章的图片
@@ -149,7 +151,7 @@ class Search360:
         self.save_Image(allUserfulImage)
 
 if __name__ == '__main__':
-    word = input("搜索：");
+    word = input("搜索：")
     page = input("共100页，搜索页数：")
     startPage = input("开始页数：")
     mark = input("保存标记：")

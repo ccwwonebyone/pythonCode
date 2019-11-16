@@ -30,5 +30,5 @@ class ExcelToCsv:
         data_xls.to_csv(save_path + '/' + file_name + '.csv')
 
 if __name__ == '__main__':
-    excel_to_csv = ExcelToCsv('/Users/zhangzhirong/Desktop/gongju/excels')
+    excel_to_csv = ExcelToCsv('./')
     excel_to_csv.walk()
