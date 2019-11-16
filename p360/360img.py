@@ -29,7 +29,7 @@ class Search360:
             if i >= self.pages * (self.startPage-1):
                 url = 'http://image.so.com/j?q={}&src=srp&correct={}&sn={}&pn={}'.format(self.word,self.word,i,i+50)
                 urls.append(url)
-        return urls;
+        return urls
 
     def get_360Json(self,link):
         re = requests.get(link)
@@ -100,7 +100,7 @@ class Search360:
         self.save_Image(images)
 
 if __name__ == '__main__':
-    word = input("搜索：");
+    word = input("搜索：")
     page = input("共100页，搜索页数：")
     startPage = input("开始页数：")
     mark = input("保存标记：")
@@ -118,5 +118,5 @@ if __name__ == '__main__':
         mark = chr(random.randint(97, 122))
 
     print('搜索：{}，总共{}页，从第{}页开始，生成图片标记{},生成目录{}'.format(word,page,startPage,mark,word))
-    searchs = Search360(word,page,startPage,mark);
+    searchs = Search360(word,page,startPage,mark)
     searchs.all_start()
