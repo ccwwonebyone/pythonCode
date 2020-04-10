@@ -27,7 +27,7 @@ class BuildMysqlDoc:
         return tables
 
     def get_cloumns(self, table):
-        sql = 'show full columns from '+table
+        sql = 'show full columns from `'+table+'`'
         self.cursor.execute(sql)
         columns = []
         for column in self.cursor.fetchall():
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     field_str = ' | '.join(list(fields.values()))
     table_str = '---|'*len(fields)
     table_str = table_str[:-1]
-    handler = open(db+'.md','w')
+    handler = open(db+'.md','w', encoding='utf-8')
     content = '[TOC]'
     content += "\r\n"
     content += '# '+db
