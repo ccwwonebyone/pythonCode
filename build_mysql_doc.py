@@ -31,9 +31,12 @@ class BuildMysqlDoc:
         self.cursor.execute(sql)
         columns = []
         for column in self.cursor.fetchall():
+            column_comment = str(column[8]).replace("\r", "")
+            column_comment = column_comment.replace("\n", "")
+            column_comment = column_comment.replace("|", " ")
             columns.append({
                 'name': str(column[0]),
-                'comment': str(column[8]),
+                'comment': column_comment,
                 'type': str(column[1]),
                 'isnull': str(column[3]),
                 'default': str(column[5]),
@@ -88,6 +91,6 @@ engine："""+table['engine']+"""
 """
         for column in build_mysql_doc.get_cloumns(table['name']):
             content += ' | '.join(list(column.values()))
-            content += "\r\n"
+            content += "\r"
     handler.write(content)
     handler.close()
