@@ -1,0 +1,10 @@
+<?php
+
+namespace {NamespaceFilter};
+
+use {RootNamespace}\{FiltersDir}\QueryFilter;
+
+class {Filter} extends QueryFilter
+{{
+{filter_function}
+}}

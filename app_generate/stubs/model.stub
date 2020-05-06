@@ -1,0 +1,20 @@
+<?php
+
+namespace {NamespaceModel};
+
+use {RootNamespace}\{ModelDir}\BaseEloquent;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use {RootNamespace}\{ModelDir}\Traits\Filterable;
+
+class {Model} extends BaseEloquent
+{{
+    use SoftDeletes, Filterable;
+
+    protected $table = '{table}';
+
+    protected $fillable = {fillable};
+
+    protected $hidden = [
+        'deleted_at'
+    ];
+}}

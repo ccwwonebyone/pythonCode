@@ -1,0 +1,88 @@
+<?php
+
+namespace {NamespaceService};
+
+use App\Exceptions\ResponseCodeException;
+use App\Filters\QueryFilter;
+use {NamespaceModel}\{Model};
+use App\Service\BaseService;
+
+class {Service} extends BaseService
+{{
+    /**
+     * @param QueryFilter $filter
+     * @param int $num
+     * @return array
+     */
+    public function get{Model}List(QueryFilter $filter, $num = 10)
+    {{
+        $selects = (new {Model})->getFillable();
+        return {Model}::select(...$selects)->filter($filter)
+                ->orderBy('created_at', 'desc')->skipTake($num)->toArray();
+    }}
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function get{Model}ById(int $id)
+    {{
+        return {Model}::find($id);
+    }}
+
+    /**
+     * @param array $data
+     * @return mixed
+     * @throws \App\Exceptions\ResponseCodeException
+     */
+    public function create{Model}(array $data)
+    {{
+        if (${variable} = {Model}::create($data)) {{
+            return ${variable};
+        }} else {{
+            throw_response_code('创建失败');
+        }}
+    }}
+
+    /**
+     * @param int $id
+     * @param array $data
+     * @return mixed
+     * @throws \App\Exceptions\ResponseCodeException
+     */
+    public function update{Model}(int $id, array $data)
+    {{
+        ${variable} = $this->find{Model}ById($id);
+        if ($res = ${variable}->update($data)) {{
+            return $res;
+        }} else {{
+            throw_response_code('修改失败');
+        }}
+    }}
+
+    /**
+     * @param int $id
+     * @return {Model}
+     * @throws ResponseCodeException
+     */
+    public function find{Model}ById(int $id)
+    {{
+        if (!${variable} = {Model}::find($id)) {{
+            throw_response_code('无相关数据');
+        }}
+        return ${variable};
+    }}
+
+     /**
+     * @param int $id
+     * @return {Model}
+     * @throws ResponseCodeException
+     */
+    public function delete{Model}(int $id)
+    {{
+        if(!{Model}::where('id', $id)->delete()){{
+            throw_response_code('删除失败');
+        }}
+        return true;
+    }}
+}}

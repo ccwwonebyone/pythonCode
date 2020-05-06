@@ -1,0 +1,10 @@
+<?php
+
+namespace {NamespaceEnum};
+
+use {RootNamespace}\{EnumsDir}\BaseEnum;
+
+class {Enum} extends BaseEnum
+{{
+{const}
+}}

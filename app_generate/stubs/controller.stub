@@ -1,0 +1,83 @@
+<?php
+
+namespace {NamespaceController};
+
+use App\Exceptions\ResponseCodeException;
+use {NamespaceFilter}\{Filter};
+use {NamespaceService}\{Service};
+use Illuminate\Http\Request;
+use App\Http\Controllers\Admin\BaseController;
+
+class {Controller} extends BaseController
+{{
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @param {Filter} $filter
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(Request $request, {Filter} $filter)
+    {{
+        $data = {Service}::instance()->get{Model}List($filter, $request->input('num', 15));
+        return $this->success($data);
+    }}
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ResponseCodeException
+     */
+    public function store(Request $request)
+    {{
+        $this->valid($request, {valid});
+        $data = $request->all();
+        {Service}::instance()->create{Model}($data);
+        return $this->success();
+    }}
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(int $id, Request $request)
+    {{
+        return $this->success(
+            {Service}::instance()->get{Model}ById($id)
+        );
+    }}
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ResponseCodeException
+     */
+    public function update(Request $request, int $id)
+    {{
+        $this->valid($request, {valid});
+        $data = $request->all();
+        {Service}::instance()->update{Model}($id, $data);
+        return $this->success();
+    }}
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ResponseCodeException
+     */
+    public function destroy(int $id)
+    {{
+        {Service}::instance()->delete{Model}($id);
+        return $this->success();
+    }}
+}}
