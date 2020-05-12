@@ -62,8 +62,8 @@ class PhpGenerate:
         filter_function = []
         filter_function_temp =  """
     /**
-    * ${name} {comment}
-    */
+     * ${name} {comment}
+     */
     public function {name}(${name})
     {{
         $this->builder->where('{name}', ${name});
@@ -75,7 +75,6 @@ class PhpGenerate:
             filter_function.append(filter_function_temp.format(**{
                 "comment":column['comment'] if column['comment'] != '' else  column['name'], 
                 "name":column['name'], 
-                "name":column['name']
             }))
         filter_function = "\n".join(filter_function)
 
@@ -96,7 +95,6 @@ class PhpGenerate:
     枚举
     '''
     def set_enum_content(self):
-        enums = []
         enum_dir = "Enum"
         namespace_enum = self.namespace + '\\' + enum_dir + '\\' + self.sub_dir
 
@@ -115,11 +113,15 @@ class PhpGenerate:
                     enum_colum_info = enum_colum.split(':')
                     const = """
     /**
-    * {}
-    */
-    const {} = {};
+     * {comment}
+     */
+    const {const} = {value};
                             """
-                    consts.append(const.format(*enum_colum_info))
+                    consts.append(const.format(**{
+                        "comment":enum_colum_info[1],
+                        "const":enum_colum_info[2],
+                        "value":enum_colum_info[0]
+                    }))
 
                 consts = "\r\n".join(consts)
                 content = enum_content.format(**{
@@ -158,12 +160,11 @@ class PhpGenerate:
 
     def set_controller_content(self):
         controller_dir = 'Http/Controllers/Admin'
+        namespace_controller = self.namespace + '\Http\Controllers\Admin\\' + self.sub_dir
 
-        namespace_controller = self.namespace + '\\' + 'Http\Controllers\Admin' + '\\' + self.sub_dir
         controller = self.base_name + 'Controller'
-
-        content = open('./stubs/controller.stub', 'r',  encoding='utf-8').read()
-
+        self.generate_info['namespace_controller'] = namespace_controller
+        self.generate_info['controller'] = controller
         valids = []
         for column in self.columns:
             if column['name'] not in ['id', 'created_at', 'updated_at', 'deleted_at']:
@@ -186,19 +187,79 @@ class PhpGenerate:
             'path': self.base_path + self.app_path + '/' + controller_dir + '/' + self.sub_dir + '/' + controller + '.php'
         })
 
+    def set_router_content(self):
+        router_path = '../../routes/admin.php'
+        content = self.get_file_content(router_path)
+        ##############################
+        # 生成基础路由信息
+        ##############################
+        router_sign = "//$router router for app generate don't delete"
+        
+        router_resource = "//$" + self.sub_dir.lower() + " sub router for app generate don't delete"
+
+        if router_resource not in content:
+            base_router = """
+    $router->group(['prefix' => '{prefix}', 'namespace' => '{namespace}'], function () use ($router) {{
+        """ + router_resource + """
+    }});
+    """ + router_sign + """"""
+            content = content.replace(router_sign, base_router.format(**{
+                'prefix': self.sub_dir.lower(),
+                'namespace': self.sub_dir,
+                'router':self.sub_dir.lower(),
+            }))
+        #########################
+        # 基础资源路由
+        #########################
+        sub_prefix = self.table.replace(self.sub_dir.lower(), '')
+        if 'route:' + self.table in content:
+            print('route has generate')
+            return True
+        if sub_prefix == '':
+            router = """
+        //route:"""+ self.table +"""
+        $router->get('/', '{controller}@index');
+        $router->post('/', '{controller}@store');
+        $router->put('/{{id:[0-9]+}}', '{controller}@update');
+        $router->delete('/{{id:[0-9]+}}', '{controller}@destroy');
+        $router->get('/{{id:[0-9]+}}', '{controller}@show');
+        //$router sub router for app generate don't delete
+                """
+            content = content.replace(router_resource, router.format(**{
+                "controller":self.generate_info['controller']
+            }))
+        else:
+            sub_prefix = sub_prefix[1:]
+            router = """
+        //route:"""+ self.table +"""
+        $router->group(['prefix' => '{sub_prefix}'], function () use ($router) {{
+            $router->get('/', '{controller}@index');
+            $router->post('/', '{controller}@store');
+            $router->put('/{{id:[0-9]+}}', '{controller}@update');
+            $router->delete('/{{id:[0-9]+}}', '{controller}@destroy');
+            $router->get('/{{id:[0-9]+}}', '{controller}@show');
+        }});
+        //$router sub router for app generate don't delete
+                """
+            content = content.replace(router_resource, router.format(**{
+                "sub_prefix":sub_prefix,
+                "controller":self.generate_info['controller']
+            }))
+        self.write_file_content(router_path, content, True)
+
     def get_file_content(self, file_path):
         handler = open(file_path, 'r', encoding='utf-8')
         content = handler.read()
         handler.close()
         return content
 
-    def write_file_content(self, file_path, content):
+    def write_file_content(self, file_path, content, force = False):
         dir_name = os.path.dirname(file_path)
 
         if os.path.exists(dir_name) is not True:
                 os.makedirs(dir_name)
 
-        if os.path.exists(file_path):
+        if os.path.exists(file_path) and force is False:
             print(file_path + ' has exists')
         else:
             open(file_path, 'w+', encoding='utf-8').write(content)
@@ -220,6 +281,7 @@ class PhpGenerate:
         self.set_service_content()
         #controller一定放到最后执行
         self.set_controller_content()
+        self.set_router_content()
         for info in self.save_info:
             self.write_file_content(info['path'], info['content'])
         print(self.get_columns_json())
