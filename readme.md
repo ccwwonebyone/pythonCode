@@ -6,7 +6,7 @@
 ## 关于深度学习keras框架安装(windows)2017-01-18
 [安装参考网址](http://keras-cn.readthedocs.io/en/latest/)
 
-安装工具：conda windows：[minconda](https://conda.io/miniconda.html)
+安装工具：conda windows：[miniconda](https://conda.io/miniconda.html)
 
 安装numpy,scipy,theano,MinGW,libpython
 
